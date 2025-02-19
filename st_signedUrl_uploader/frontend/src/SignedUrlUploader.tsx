@@ -49,7 +49,6 @@ class SignedUrlUploader extends StreamlitComponentBase<State> {
     return (
       <div style={{ padding: "20px" }}>
         <div style={containerStyle}>
-        <img src={uploadIcon} style={imageStyle} alt="Upload Icon"/>
         <input
           type="file"
           onChange={this.onFileUpload}
