@@ -1,6 +1,22 @@
 from pathlib import Path
-
+import os
+import subprocess
 import setuptools
+from setuptools.command.build_py import build_py
+
+class BuildFrontend(build_py):
+    """Custom build command to build the frontend before packaging."""
+    
+    def run(self):
+        frontend_dir = os.path.join(os.path.dirname(__file__), "st_signedUrl_uploader/frontend")
+        if os.path.exists(frontend_dir):
+            print("Building frontend...")
+            subprocess.check_call(["npm", "install"], cwd=frontend_dir)
+            subprocess.check_call(["npm", "run", "build"], cwd=frontend_dir)
+        else:
+            print("Warning: Frontend directory not found, skipping build.")
+        super().run()
+
 
 this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
@@ -14,6 +30,7 @@ setuptools.setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="",
+    cmdclass={"build_py": BuildFrontend}, 
     packages=setuptools.find_packages(),
     include_package_data=True,
     package_data={
